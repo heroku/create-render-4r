@@ -18,7 +18,7 @@ Features
     * set HTML `title` & `meta` elements
   * Async data loading via `static fetchData()` defined on components within current route
   * Not-ok HTTP responses
-    * **301** for React Router's [<Redirect/> component](https://github.com/rackt/react-router/blob/latest/docs/guides/basics/RouteConfiguration.md#preserving-urls)
+    * **301** for React Router's [`<Redirect/>` component](https://github.com/rackt/react-router/blob/latest/docs/guides/basics/RouteConfiguration.md#preserving-urls)
     * **404** for unmatched URLs
 
 Usage
@@ -58,6 +58,7 @@ This function is used to generate the Express.js handler. It accepts a single ob
   * `routes` (required) the [`<Router/>` component](https://github.com/rackt/react-router/blob/latest/docs/guides/basics/RouteConfiguration.md)
   * `createStore` (required) the [`createStore()` function](http://redux.js.org/docs/basics/Store.html)
   * `layoutHtml` (required) an HTML template function; this sample uses ES2015 module & template string syntx:
+  
     ```javascript
 function layoutHtml(componentHTML, initialState, documentMeta) {
   return `
@@ -80,6 +81,7 @@ function layoutHtml(componentHTML, initialState, documentMeta) {
 }
     ```
   * `decorateResponse` (optional) a side-effect function to update the response based on state:
+     
     ```javascript
 function decorateResponse(res, state) {
   /*
