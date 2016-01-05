@@ -1,0 +1,20 @@
+{
+  "name": "create-render-4r",
+  "version": "0.1.0",
+  "description": "Express.js handler to render a React+Router+Redux+Radium (4r) app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "mars@heroku.com",
+  "license": "MIT",
+  "dependencies": {
+    "history": "^1.13.0",
+    "radium": "^0.15.3",
+    "react": "^0.14.3",
+    "react-document-meta": "^2.0.0",
+    "react-dom": "^0.14.0",
+    "react-redux": "^3.1.0",
+    "react-router": "^1.0.0"
+  }
+}
