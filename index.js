@@ -78,9 +78,9 @@ function createRender4r(params) {
           );
 
           // Freshen state after render.
-          var initialState = store.getState();
+          var cleanInitialState = serializeState(store.getState());
           var documentMeta = DocumentMeta.renderAsHTML();
-          var HTML = layoutHtml(componentHTML, initialState, documentMeta);
+          var HTML = layoutHtml(componentHTML, cleanInitialState, documentMeta);
           res.end(HTML);
         })
         .catch(function(error) {
@@ -91,6 +91,11 @@ function createRender4r(params) {
   };
 
   return universalRender;
+}
+
+// Prevent XSS vulnerability from JSON-embedded <script></script>
+function serializeState(v) {
+  return JSON.stringify(v).replace(/</g, '\\u003c');
 }
 
 module.exports = createRender4r;

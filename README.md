@@ -5,15 +5,18 @@ Creates an Express.js handler function to render the app.
 Features
 --------
 
-  * [React UI](http://reactjs.com)
-    * synchronous rendering of the app's HTML
-  * [React Router](https://github.com/rackt/react-router)
-    * matches the component tree to URLs
-  * [Redux state container](http://redux.js.org)
-    * serializes initial state for the web browser
-    * initial state can influence the HTTP response via `decorateResponse`
-  * [Radium styles](http://stack.formidable.com/radium/)
-    * [autoprefixes CSS](https://github.com/formidablelabs/radium/tree/master/docs/api#configuseragent) based on HTTP "User-Agent" header
+  * Composed of "4r"
+    * [React UI](http://reactjs.com)
+      * synchronous rendering of the app's HTML
+    * [React Router](https://github.com/rackt/react-router)
+      * matches the component tree to URLs
+    * [Redux state container](http://redux.js.org)
+      * serializes & sanitizes initial state for the web browser
+      * initial state can influence the HTTP response
+      * response decoration based on initial state via [`decorateResponse()`](#createRender4r)
+        * e.g. set response status **404** if `fetchData()` returns **404**
+    * [Radium styles](http://stack.formidable.com/radium/)
+      * [autoprefixes CSS](https://github.com/formidablelabs/radium/tree/master/docs/api#configuseragent) based on HTTP "User-Agent" header
   * [DocumentMeta](https://github.com/kodyl/react-document-meta)
     * set HTML `title` & `meta` elements
   * Async data loading via `static fetchData()` defined on components within current route
@@ -23,6 +26,8 @@ Features
 
 Usage
 -----
+[Example app](example) demonstrates using this renderer in a working Universal app.
+
 Here's a sample setup, with details following:
 
 ```javascript
@@ -60,7 +65,7 @@ This function is used to generate the Express.js handler. It accepts a single ob
   * `layoutHtml` (required) an HTML template function; this sample uses ES2015 module & template string syntx:
   
     ```javascript
-function layoutHtml(componentHTML, initialState, documentMeta) {
+function layoutHtml(componentHTML, cleanInitialState, documentMeta) {
   return `
     <!DOCTYPE html>
     <html>
