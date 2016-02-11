@@ -9,7 +9,7 @@ var ReactDomServer        = require('react-dom/server');
 var renderToString        = ReactDomServer.renderToString;
 var ReactRedux            = require('react-redux');
 var Provider              = ReactRedux.Provider;
-var DocumentMeta          = require('react-document-meta');
+var DocumentMeta          = require('react-document-meta').default;
 var RadiumWrapper         = require('./lib/radium-wrapper');
 
 function createRender4r(params) {
