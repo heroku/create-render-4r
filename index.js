@@ -36,7 +36,7 @@ function createRender4r(params) {
     var history                   = useQueries(createMemoryHistory)();
     var location                  = history.createLocation(req.url);
     var store                     = createStore();
-    var userAgent                 = req.headers["user-agent"];
+    var userAgent                 = req.headers['user-agent'];
 
     match({
       routes: routes,

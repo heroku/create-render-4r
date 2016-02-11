@@ -26,7 +26,7 @@ Features
 
 Usage
 -----
-[Example app](example) demonstrates using this renderer in a working Universal app.
+[Example app](https://github.com/heroku/create-render-4r-example) demonstrates using this renderer in a working Universal app.
 
 Here's a sample setup, with details following:
 
