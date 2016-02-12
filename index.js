@@ -37,7 +37,12 @@ function createRender4r(params) {
   var universalRender = function(req, res, next) {
     var history                   = useQueries(createMemoryHistory)();
     var location                  = history.createLocation(req.url);
-    var store                     = createStore();
+    var store                     = createStore({
+      // Capture hostname in Redux state
+      sourceRequest: {
+        host: req.headers.host
+      }
+    });
     var userAgent                 = req.headers['user-agent'];
 
     match({
