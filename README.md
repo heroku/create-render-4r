@@ -107,3 +107,15 @@ static fetchData(dispatch, props) {
 }
 ```
 
+### `state.sourceRequest.host`
+
+Frequently, app code will need its canonical hostname or URL to render links or make API requests. This module will help you!
+
+To load the hostname into Redux state, add this module's reducers to your store, like in [the example](https://github.com/heroku/create-render-4r-example/blob/master/common/reducers/index.js).
+
+…and then access it:
+```javascript
+# `store` is the Redux store
+const state = store.getState();
+const host = state.sourceRequest.host;
+```
