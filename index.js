@@ -38,8 +38,9 @@ function createRender4r(params) {
     var history                   = useQueries(createMemoryHistory)();
     var location                  = history.createLocation(req.url);
     var store                     = createStore({
-      // Capture hostname in Redux state
+      // Capture protocol & hostname in Redux state
       sourceRequest: {
+        protocol: req.headers['x-forwarded-proto'] || req.protocol,
         host: req.headers.host
       }
     });

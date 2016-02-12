@@ -119,20 +119,25 @@ static fetchData(dispatch, props) {
 
 [Example `fetchData()`](https://github.com/heroku/create-render-4r-example/blob/master/common/components/screens/home.js)
 
-#### `state.sourceRequest.host`
+#### `state.sourceRequest.host` & `protocol`
 
-Frequently, app code will need its canonical hostname to **render absolute links** or **make API requests**. This module includes a helper to use Host within universal code.
+Frequently, app code will need its absolute URL, canonical hostname & protocol to **render links** or **make API requests**. This module includes a helper to use Host within universal code.
 
 "Host" is an HTTP header containing the `hostname:port` requested of the web server.
 
-Example values:
+Example `host` values:
 
 * `localhost:3000`
 * `example.com`
 * `api.example.com:8443`
 * `velvet-glacier-1234.herokuapp.com`
 
-To use `state.sourceRequest.host` in an app:
+Example `protocol` values:
+
+* `https`
+* `http`
+
+To use these values in an app:
 
 1. Add this module's reducers to your store:
   ```javascript
@@ -152,6 +157,7 @@ const rootReducer = combineReducers(
   ```javascript
 // `store` is the Redux store
 const state = store.getState();
+const proto = state.sourceRequest.protocol;
 const host = state.sourceRequest.host;
   ```
 
