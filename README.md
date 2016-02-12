@@ -26,10 +26,14 @@ Features
 
 Usage
 -----
-[Example app](https://github.com/heroku/create-render-4r-example) demonstrates using this renderer in a working Universal app.
+[Example Universal Web App](https://github.com/heroku/create-render-4r-example) demonstrates using this renderer in a working Universal app.
 
-Here's a sample setup, with details following:
+#### Add the module to `package.json`
+```bash
+npm install heroku/create-render-4r --save
+```
 
+#### `server.js`
 ```javascript
 var express = require('express');
 var createRender4r = require('create-render-4r');
@@ -57,7 +61,9 @@ app.listen(PORT, function () {
 });
 ```
 
-### `createRender4r()`
+[Example `server.js`](https://github.com/heroku/create-render-4r-example/blob/master/server/server.js)
+
+#### `createRender4r(routes, createStore, layoutHtml [, decorateResponse])`
 This function is used to generate the Express.js handler. It accepts a single object argument with the properties:
 
   * `routes` (required) the [`<Router/>` component](https://github.com/rackt/react-router/blob/latest/docs/guides/basics/RouteConfiguration.md)
@@ -94,11 +100,15 @@ function decorateResponse(res, state) {
     while the app still renders a nice Not Found message in the UI.
   */
   var errText = state.item.get('error');
-  if (errText && /^404/.exec(errText)) { res.status(404) }
+  if (errText && /^404/.exec(errText)) {
+    res.status(404)
+  }
 }
     ```
 
-### `fetchData()`
+[Example `createRender4r()`](https://github.com/heroku/create-render-4r-example/blob/master/server/server.js)
+
+#### `fetchData(dispatch, props)`
 Define this static (class) method on React components to enable server-side fetching. You'll need to use a universal library like [isomporphic-fetch](https://github.com/niftylettuce/isomorphic-fetch) within [redux-thunk](https://github.com/gaearon/redux-thunk) async action creators so they will work equivalently on the server-side & in web browsers.
 
 ```javascript
@@ -107,15 +117,42 @@ static fetchData(dispatch, props) {
 }
 ```
 
-### `state.sourceRequest.host`
+[Example `fetchData()`](https://github.com/heroku/create-render-4r-example/blob/master/common/components/screens/home.js)
 
-Frequently, app code will need its canonical hostname or URL to render links or make API requests. This module will help you!
+#### `state.sourceRequest.host`
 
-To load the hostname into Redux state, add this module's reducers to your store, like in [the example](https://github.com/heroku/create-render-4r-example/blob/master/common/reducers/index.js).
+Frequently, app code will need its canonical hostname to **render absolute links** or **make API requests**. This module includes a helper to use Host within universal code.
 
-…and then access it:
-```javascript
+"Host" is an HTTP header containing the `hostname:port` requested of the web server.
+
+Example values:
+
+* `localhost:3000`
+* `example.com`
+* `api.example.com:8443`
+* `velvet-glacier-1234.herokuapp.com`
+
+To use `state.sourceRequest.host` in an app:
+
+1. Add this module's reducers to your store:
+  ```javascript
+import { combineReducers } from 'redux'
+import { reducers as cr4rReducers } from 'create-render-4r'
+
+const rootReducer = combineReducers(
+  Object.assign(
+    cr4rReducers,
+    // …& the app's reducers
+  )
+)
+  ```
+  
+  [Example `reducers/index.js`](https://github.com/heroku/create-render-4r-example/blob/master/common/reducers/index.js)
+1. Then access it in the Redux state:
+  ```javascript
 // `store` is the Redux store
 const state = store.getState();
 const host = state.sourceRequest.host;
-```
+  ```
+
+  [Example `actions/counter.js`](https://github.com/heroku/create-render-4r-example/blob/master/common/actions/counter.js)
