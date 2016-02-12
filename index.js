@@ -11,6 +11,8 @@ var ReactRedux            = require('react-redux');
 var Provider              = ReactRedux.Provider;
 var DocumentMeta          = require('react-document-meta').default;
 var RadiumWrapper         = require('./lib/radium-wrapper');
+var sourceRequestActions  = require('./lib/actions/source-request');
+var sourceRequestReducers = require('./lib/reducers/source-request');
 
 function createRender4r(params) {
   if (typeof params !== 'object') {
@@ -99,3 +101,9 @@ function serializeState(v) {
 }
 
 module.exports = createRender4r;
+module.exports.actions = {
+  sourceRequest: sourceRequestActions
+},
+module.exports.reducers = {
+  sourceRequest: sourceRequestReducers
+};
