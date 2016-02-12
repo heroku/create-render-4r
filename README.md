@@ -115,7 +115,7 @@ To load the hostname into Redux state, add this module's reducers to your store,
 
 …and then access it:
 ```javascript
-# `store` is the Redux store
+// `store` is the Redux store
 const state = store.getState();
 const host = state.sourceRequest.host;
 ```
