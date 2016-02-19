@@ -4,7 +4,7 @@
   "description": "Express.js handler to render a React+Router+Redux+Radium (4r) app",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "ava"
   },
   "author": "mars@heroku.com",
   "license": "MIT",
@@ -18,5 +18,16 @@
     "react-redux": "^3.1.0",
     "react-router": "^1.0.0",
     "redux": "^3.3.1"
+  },
+  "devDependencies": {
+    "ava": "^0.12.0"
+  },
+  "ava": {
+    "files": [
+      "**/*-test.js"
+    ],
+    "require": [
+      "babel-core/register"
+    ]
   }
 }

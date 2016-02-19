@@ -24,7 +24,7 @@ function createRender4r(params) {
   var layoutHtml = params.layoutHtml;
   var decorateResponse = params.decorateResponse;
 
-  if (typeof routes !== 'object') {
+  if (routes == null || typeof routes !== 'object') {
     throw new Error('createRender4r requires a `routes` object');
   }
   if (typeof createStore !== 'function') {
@@ -35,22 +35,22 @@ function createRender4r(params) {
   }
   
   var universalRender = function(req, res, next) {
+    var headers                   = req.headers || {};
     var history                   = useQueries(createMemoryHistory)();
     var location                  = history.createLocation(req.url);
     var store                     = createStore({
       // Capture protocol & hostname in Redux state
       sourceRequest: {
-        protocol: req.headers['x-forwarded-proto'] || req.protocol,
-        host: req.headers.host
+        protocol: headers['x-forwarded-proto'] || req.protocol,
+        host: headers.host
       }
     });
-    var userAgent                 = req.headers['user-agent'];
+    var userAgent                 = headers['user-agent'];
 
     match({
       routes: routes,
       location: location
     }, function(error, redirectLocation, renderProps) {
-
       if (redirectLocation) {
         res.redirect(301, redirectLocation.pathname + redirectLocation.search);
       } else if (error) {
@@ -62,7 +62,7 @@ function createRender4r(params) {
         Promise.all(
           renderProps.routes
             .filter(function(route) {
-              return route.component.fetchData;
+              return route.component && route.component.fetchData;
             })
             .map(function(route) {
               return route.component.fetchData(store.dispatch, renderProps);
