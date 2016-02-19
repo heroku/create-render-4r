@@ -82,7 +82,6 @@ test('Includes source request protocol & host in initial state', t => {
 
 test('Includes inline CSS', t => {
   const c = t.context;
-  console.log(c.response.body)
   t.ok(
     c.response.body.indexOf('<style') >= 0,
     'contains a <style> element');
