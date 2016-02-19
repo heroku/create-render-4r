@@ -32,7 +32,7 @@ Usage
 
 #### Add the module to `package.json`
 ```bash
-npm install heroku/create-render-4r --save
+npm install create-render-4r --save
 ```
 
 #### `server.js`
