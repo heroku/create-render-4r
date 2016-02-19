@@ -73,39 +73,39 @@ This function is used to generate the Express.js handler. It accepts a single ob
   * `layoutHtml` (required) an HTML template function; this sample uses ES2015 module & template string syntx:
   
     ```javascript
-function layoutHtml(componentHTML, cleanInitialState, documentMeta) {
-  return `
-    <!DOCTYPE html>
-    <html>
-      <head>
-        ${documentMeta}
+    function layoutHtml(componentHTML, cleanInitialState, documentMeta) {
+      return `
+        <!DOCTYPE html>
+        <html>
+          <head>
+            ${documentMeta}
 
-        <script type="application/javascript">
-          window.__INITIAL_STATE__ = ${cleanInitialState};
-        </script>
-      </head>
-      <body>
-        <div id="react-view">${componentHTML}</div>
+            <script type="application/javascript">
+              window.__INITIAL_STATE__ = ${cleanInitialState};
+            </script>
+          </head>
+          <body>
+            <div id="react-view">${componentHTML}</div>
 
-        <script type="application/javascript" src="/bundle.js"></script>
-      </body>
-    </html>
-  `;
-}
+            <script type="application/javascript" src="/bundle.js"></script>
+          </body>
+        </html>
+      `;
+    }
     ```
   * `decorateResponse` (optional) a side-effect function to update the response based on state:
      
     ```javascript
-function decorateResponse(res, state) {
-  /*
-  Example: set 404 response status when the item couldn't be fetched,
-    while the app still renders a nice Not Found message in the UI.
-  */
-  var errText = state.item.get('error');
-  if (errText && /^404/.exec(errText)) {
-    res.status(404)
-  }
-}
+    function decorateResponse(res, state) {
+      /*
+      Example: set 404 response status when the item couldn't be fetched,
+        while the app still renders a nice Not Found message in the UI.
+      */
+      var errText = state.item.get('error');
+      if (errText && /^404/.exec(errText)) {
+        res.status(404)
+      }
+    }
     ```
 
 [Example `createRender4r()`](https://github.com/heroku/create-render-4r-example/blob/master/server/server.js)
@@ -143,24 +143,24 @@ To use these values in an app:
 
 1. Add this module's reducers to your store:
   ```javascript
-import { combineReducers } from 'redux'
-import { reducers as cr4rReducers } from 'create-render-4r'
+  import { combineReducers } from 'redux'
+  import { reducers as cr4rReducers } from 'create-render-4r'
 
-const rootReducer = combineReducers(
-  Object.assign(
-    cr4rReducers,
-    // …& the app's reducers
+  const rootReducer = combineReducers(
+    Object.assign(
+      cr4rReducers,
+      // …& the app's reducers
+    )
   )
-)
   ```
   
   [Example `reducers/index.js`](https://github.com/heroku/create-render-4r-example/blob/master/common/reducers/index.js)
 1. Then access it in the Redux state:
   ```javascript
-// `store` is the Redux store
-const state = store.getState();
-const proto = state.sourceRequest.protocol;
-const host = state.sourceRequest.host;
+  // `store` is the Redux store
+  const state = store.getState();
+  const proto = state.sourceRequest.protocol;
+  const host = state.sourceRequest.host;
   ```
 
   [Example `actions/counter.js`](https://github.com/heroku/create-render-4r-example/blob/master/common/actions/counter.js)
