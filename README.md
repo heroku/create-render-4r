@@ -2,6 +2,8 @@ Server-side render for React+Router+Redux+Radium (4r)
 ================================================
 Creates an Express.js handler function to render the app.
 
+[![Build Status](https://travis-ci.org/heroku/create-render-4r.svg?branch=master)](https://travis-ci.org/heroku/create-render-4r)
+
 Features
 --------
 
