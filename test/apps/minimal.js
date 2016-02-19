@@ -1,6 +1,6 @@
 import React, { Component }   from 'react';
-import { Route, IndexRoute }  from 'react-router';
-import { createStore as reduxCreateStore, combineReducers }                  from 'redux';
+import { Route, IndexRoute, Redirect } from 'react-router';
+import { createStore as reduxCreateStore, combineReducers } from 'redux';
 import Radium, { Style }      from 'radium';
 import DocumentMeta           from 'react-document-meta';
 
@@ -58,6 +58,7 @@ const Home = Radium(HomeComponent);
 export var routes = (
   <Route path="/" component={App}>
     <IndexRoute component={Home}/>
+    <Redirect from="old-home" to="/"/>
   </Route>
 );
 

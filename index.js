@@ -56,7 +56,8 @@ function createRender4r(params) {
       } else if (error) {
         next(error);
       } else if (renderProps == null) {
-        res.status(404).send('Not found');
+        res.status(404);
+        res.send('Not found');
       } else {
         // Await fetchData methods in the current route.
         Promise.all(
@@ -89,7 +90,7 @@ function createRender4r(params) {
           var cleanInitialState = serializeState(store.getState());
           var documentMeta = DocumentMeta.renderAsHTML();
           var HTML = layoutHtml(componentHTML, cleanInitialState, documentMeta);
-          res.end(HTML);
+          res.send(HTML);
         })
         .catch(function(error) {
           next(error);

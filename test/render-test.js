@@ -3,7 +3,11 @@ import createRender4r, { actions, reducers } from '..';
 
 import { routes, createStore, layoutHtml } from './apps/minimal';
 
-test.cb.beforeEach( t => {
+function buildContext(t, cb) {
+  if (typeof cb !== 'function') {
+    throw new Error('buildContext() requires `cb` argument, a callback');
+  }
+
   const c = t.context;
   // Generate the render function, an Express.js request handler
   c.render4r = createRender4r({
@@ -20,75 +24,183 @@ test.cb.beforeEach( t => {
     }
   };
   c.response = {
-    status: 200,
-    end: body => {
+    statusCode: 200,
+    headers: {},
+    send: body => {
       c.response.body = body;
-      t.end();
+      cb();
+    },
+    redirect: (statusCode, location) => {
+      c.response.headers.location = location;
+      c.response.statusCode = statusCode;
+      cb();
+    },
+    status: statusCode => {
+      c.response.statusCode = statusCode;
     }
   };
   c.next = (error) => {
-    console.error(error);
+    if (error != null) {
+      c.response.statusCode = 500;
+      cb(error);
+    } else {
+      cb();
+    }
   };
+  return c;
+}
+
+
+test.cb('Defaults to status code 200', t => {
+  function afterRequest(error) {
+    if (error != null) {
+      t.end(error);
+    } else {
+      t.is(c.response.statusCode, 200);
+      t.end();
+    }
+  }
+  const c = buildContext(t, afterRequest);
   // Perform the render
-  return c.render4r(c.request, c.response, c.next);
-})
-
-test('Defaults to status 200', t => {
-  const c = t.context;
-  t.is(c.response.status, 200);
+  c.render4r(c.request, c.response, c.next);
 });
 
-test('Sends response body', t => {
-  const c = t.context;
-  t.ok(c.response.body.indexOf('<html>') >= 0, 'contains an <html> tag');
+test.cb('Redirects with status code 301', t => {
+  function afterRequest(error) {
+    if (error != null) {
+      t.end(error);
+    } else {
+      t.is(c.response.statusCode, 301);
+      t.is(c.response.headers.location, '/');
+      t.end();
+    }
+  }
+  const c = buildContext(t, afterRequest);
+  // Perform the render
+  c.request.url = '/old-home';
+  c.render4r(c.request, c.response, c.next);
 });
 
-test('Includes title element', t => {
-  const c = t.context;
-  t.ok(
-    c.response.body.indexOf('<title>Minimal App</title>') >= 0,
-    'contains <title>Minimal App</title>');
+test.cb('Not found with status code 404', t => {
+  function afterRequest(error) {
+    if (error != null) {
+      t.end(error);
+    } else {
+      t.is(c.response.statusCode, 404);
+      t.end();
+    }
+  }
+  const c = buildContext(t, afterRequest);
+  // Perform the render
+  c.request.url = '/non-existent-path';
+  c.render4r(c.request, c.response, c.next);
 });
 
-test('Includes components in "/" route', t => {
-  const c = t.context;
-  t.ok(
-    c.response.body.indexOf('id="app-view"') >= 0,
-    'contains the App component');
-  t.ok(
-    c.response.body.indexOf('id="home-view"') >= 0,
-    'contains the Home component');
+test.cb('Sends response body', t => {
+  function afterRequest(error) {
+    if (error != null) {
+      t.end(error);
+    } else {
+      t.ok(c.response.body.indexOf('<html>') >= 0, 'contains an <html> tag');
+      t.end();
+    }
+  }
+  const c = buildContext(t, afterRequest);
+  // Perform the render
+  c.render4r(c.request, c.response, c.next);
 });
 
-test('Includes initial state JSON data', t => {
-  const c = t.context;
-  t.ok(
-    c.response.body.indexOf('__INITIAL_STATE__ = {') >= 0,
-    'sets a JSON object');
+test.cb('Includes title element', t => {
+  function afterRequest(error) {
+    if (error != null) {
+      t.end(error);
+    } else {
+      t.ok(
+        c.response.body.indexOf('<title>Minimal App</title>') >= 0,
+       'contains <title>Minimal App</title>');
+      t.end();
+    }
+  }
+  const c = buildContext(t, afterRequest);
+  // Perform the render
+  c.render4r(c.request, c.response, c.next);
 });
 
-test('Includes source request protocol & host in initial state', t => {
-  const c = t.context;
-  t.ok(
-    c.response.body.indexOf('"sourceRequest":{') >= 0,
-    'contains "sourceRequest" property');
-  t.ok(
-    c.response.body.indexOf('"protocol":"http"') >= 0,
-    'contains "protocol" property');
-  t.ok(
-    c.response.body.indexOf('"host":"example.com"') >= 0,
-    'contains "host" property');
+test.cb('Includes components in "/" route', t => {
+  function afterRequest(error) {
+    if (error != null) {
+      t.end(error);
+    } else {
+      t.ok(
+        c.response.body.indexOf('id="app-view"') >= 0,
+      'contains the App component');
+      t.ok(
+        c.response.body.indexOf('id="home-view"') >= 0,
+        'contains the Home component');
+      t.end();
+    }
+  }
+  const c = buildContext(t, afterRequest);
+  // Perform the render
+  c.render4r(c.request, c.response, c.next);
 });
 
-test('Includes inline CSS', t => {
-  const c = t.context;
-  t.ok(
-    c.response.body.indexOf('<style') >= 0,
-    'contains a <style> element');
-  t.ok(
-    c.response.body.indexOf('background-color: black;') >= 0,
-    'contains background-color rule');
-  t.ok(
-    c.response.body.indexOf('color: white;') >= 0,
-    'contains color rule');
+test.cb('Includes initial state JSON data', t => {
+  function afterRequest(error) {
+    if (error != null) {
+      t.end(error);
+    } else {
+      t.ok(
+        c.response.body.indexOf('__INITIAL_STATE__ = {') >= 0,
+       'sets a JSON object');
+      t.end();
+    }
+  }
+  const c = buildContext(t, afterRequest);
+  // Perform the render
+  c.render4r(c.request, c.response, c.next);
+});
+
+test.cb('Includes source request protocol & host in initial state', t => {
+  function afterRequest(error) {
+    if (error != null) {
+      t.end(error);
+    } else {
+      t.ok(
+        c.response.body.indexOf('"sourceRequest":{') >= 0,
+        'contains "sourceRequest" property');
+      t.ok(
+        c.response.body.indexOf('"protocol":"http"') >= 0,
+        'contains "protocol" property');
+      t.ok(
+        c.response.body.indexOf('"host":"example.com"') >= 0,
+        'contains "host" property');
+      t.end();
+    }
+  }
+  const c = buildContext(t, afterRequest);
+  // Perform the render
+  c.render4r(c.request, c.response, c.next);
+});
+
+test.cb('Includes inline CSS', t => {
+  function afterRequest(error) {
+    if (error != null) {
+      t.end(error);
+    } else {
+      t.ok(
+        c.response.body.indexOf('<style') >= 0,
+        'contains a <style> element');
+      t.ok(
+        c.response.body.indexOf('background-color: black;') >= 0,
+        'contains background-color rule');
+      t.ok(
+        c.response.body.indexOf('color: white;') >= 0,
+        'contains color rule');
+      t.end();
+    }
+  }
+  const c = buildContext(t, afterRequest);
+  // Perform the render
+  c.render4r(c.request, c.response, c.next);
 });
