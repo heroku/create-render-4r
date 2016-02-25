@@ -1,41 +1,37 @@
-Server-side render for React+Router+Redux+Radium (4r)
+Universal render for React+ [![Build Status](https://travis-ci.org/heroku/create-render-4r.svg?branch=master)](https://travis-ci.org/heroku/create-render-4r)
 ================================================
-Creates an Express.js handler function to render the app.
+An Express.js handler function to render a **4r** app server-side:
 
-[![Build Status](https://travis-ci.org/heroku/create-render-4r.svg?branch=master)](https://travis-ci.org/heroku/create-render-4r)
+  * [React](http://reactjs.com) UI
+  * [React Router](https://github.com/rackt/react-router)
+  * [Redux](http://redux.js.org) state container
+  * [Radium](http://stack.formidable.com/radium/) styles
+
+![Diagram: Universal Web Apps & create-render-4r](http://universal-web-apps.s3.amazonaws.com/universal-web-apps-create-render-4r.png)
 
 Features
 --------
 
-  * Composed of "4r"
-    * [React UI](http://reactjs.com)
-      * synchronous rendering of the app's HTML
-    * [React Router](https://github.com/rackt/react-router)
-      * matches the component tree to URLs
-    * [Redux state container](http://redux.js.org)
-      * serializes & sanitizes initial state for the web browser
-      * initial state can influence the HTTP response
-      * response decoration based on initial state via [`decorateResponse()`](#createRender4r)
-        * e.g. set response status **404** if `fetchData()` returns **404**
-    * [Radium styles](http://stack.formidable.com/radium/)
-      * [autoprefixes CSS](https://github.com/formidablelabs/radium/tree/master/docs/api#configuseragent) based on HTTP "User-Agent" header
-  * [DocumentMeta](https://github.com/kodyl/react-document-meta)
-    * set HTML `title` & `meta` elements
-  * Async data loading via `static fetchData()` defined on components within current route
+  * Drop-in server-side rendering for React+Router+Redux+Radium apps
+  * Uses React's rock-solid [`ReactDOMServer.renderToString`](http://facebook.github.io/react/docs/top-level-api.html#reactdomserver.rendertostring) for synchronous rendering
+  * Instant re-hydration of app on browser using Redux initial state
+  * Set HTML `<head>` content: `<title>` & `meta` elements with [DocumentMeta](https://github.com/kodyl/react-document-meta)
+  * Per-component data loading for the current route via [`static fetchData()`](#fetchdata) defined on components
   * Not-ok HTTP responses
     * **301** for React Router's [`<Redirect/>` component](https://github.com/rackt/react-router/blob/latest/docs/guides/basics/RouteConfiguration.md#preserving-urls)
     * **404** for unmatched URLs
+    * [`decorateResponse()`](#decorateresponse) with custom status code based on Redux state
 
 Usage
 -----
 [Example Universal Web App](https://github.com/heroku/create-render-4r-example) demonstrates using this renderer in a working Universal app.
 
-#### Add the module to `package.json`
+### Add the module to `package.json`
 ```bash
 npm install create-render-4r --save
 ```
 
-#### `server.js`
+### `server.js`
 ```javascript
 var express = require('express');
 var createRender4r = require('create-render-4r');
@@ -65,8 +61,14 @@ app.listen(PORT, function () {
 
 [Example `server.js`](https://github.com/heroku/create-render-4r-example/blob/master/server/server.js)
 
-#### `createRender4r(routes, createStore, layoutHtml [, decorateResponse])`
+
+API
+---
+
+### `createRender4r()`
 This function is used to generate the Express.js handler. It accepts a single object argument with the properties:
+
+`createRender4r(routes, createStore, layoutHtml [, decorateResponse])`
 
   * `routes` (required) the [`<Router/>` component](https://github.com/rackt/react-router/blob/latest/docs/guides/basics/RouteConfiguration.md)
   * `createStore` (required) the [`createStore()` function](http://redux.js.org/docs/basics/Store.html)
@@ -110,8 +112,16 @@ This function is used to generate the Express.js handler. It accepts a single ob
 
 [Example `createRender4r()`](https://github.com/heroku/create-render-4r-example/blob/master/server/server.js)
 
-#### `fetchData(dispatch, props)`
+### `fetchData()`
+
+Per-component data loading for the current route.
+
 Define this static (class) method on React components to enable server-side fetching. You'll need to use a universal library like [isomporphic-fetch](https://github.com/niftylettuce/isomorphic-fetch) within [redux-thunk](https://github.com/gaearon/redux-thunk) async action creators so they will work equivalently on the server-side & in web browsers.
+
+`fetchData(dispatch, props)`
+
+  * `dispatch` (required) the Redux store's dispatcher
+  * `props` (required) the component's props
 
 ```javascript
 static fetchData(dispatch, props) {
@@ -121,7 +131,7 @@ static fetchData(dispatch, props) {
 
 [Example `fetchData()`](https://github.com/heroku/create-render-4r-example/blob/master/common/components/screens/home.js)
 
-#### `state.sourceRequest.host` & `protocol`
+### `state.sourceRequest.host` & `protocol`
 
 Frequently, app code will need its absolute URL, canonical hostname & protocol to **render links** or **make API requests**. This module includes a helper to use Host within universal code.
 
