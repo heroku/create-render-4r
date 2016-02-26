@@ -1,6 +1,6 @@
 Universal render for React+ [![Build Status](https://travis-ci.org/heroku/create-render-4r.svg?branch=master)](https://travis-ci.org/heroku/create-render-4r)
 ================================================
-An Express.js handler function to render a **4r** app server-side:
+[Express.js middleware](http://expressjs.com/en/guide/writing-middleware.html) to render a **4r** app server-side:
 
   * [React](http://reactjs.com) UI
   * [React Router](https://github.com/rackt/react-router)
@@ -57,7 +57,7 @@ var routes = require('./my-routes');
 var loadStore = require('./my-load-store');
 var layoutHtml = require('./my-layout-html');
 
-// Create the renderer.
+// Create the render middleware.
 var render4r = createRender4r({
   routes:       routes,
   loadStore:    loadStore,
@@ -80,9 +80,13 @@ API
 ---
 
 ### `createRender4r()`
-This function is used to generate the Express.js handler. It accepts a single object argument with the properties:
+This function is used to generate the [Express.js middleware](http://expressjs.com/en/guide/writing-middleware.html).
 
-`createRender4r({ routes, loadStore, layoutHtml, decorateResponse})`
+It accepts a single argument, an object:
+
+```javascript
+createRender4r({ routes, loadStore, layoutHtml, decorateResponse })
+```
 
   * `routes` (required) the [`<Router/>` component](https://github.com/rackt/react-router/blob/latest/docs/guides/basics/RouteConfiguration.md)
   * `loadStore` (required) a function taking initial state, returning the Redux store; created with [Redux `createStore`](http://redux.js.org/docs/basics/Store.html)
