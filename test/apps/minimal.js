@@ -1,6 +1,6 @@
 import React, { Component }   from 'react';
 import { Route, IndexRoute, Redirect } from 'react-router';
-import { createStore as reduxCreateStore, combineReducers } from 'redux';
+import { createStore, combineReducers } from 'redux';
 import Radium, { Style }      from 'radium';
 import DocumentMeta           from 'react-document-meta';
 
@@ -62,8 +62,8 @@ export var routes = (
   </Route>
 );
 
-export function createStore(initialState) {
-  return reduxCreateStore(combineReducers(reducers), initialState);
+export function loadStore(initialState) {
+  return createStore(combineReducers(reducers), initialState);
 }
 
 export function layoutHtml(html, state, meta) {

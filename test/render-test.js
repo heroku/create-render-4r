@@ -1,7 +1,7 @@
 import test from 'ava';
 import createRender4r, { actions, reducers } from '..';
 
-import { routes, createStore, layoutHtml } from './apps/minimal';
+import { routes, loadStore, layoutHtml } from './apps/minimal';
 
 function buildContext(t, cb) {
   if (typeof cb !== 'function') {
@@ -12,7 +12,7 @@ function buildContext(t, cb) {
   // Generate the render function, an Express.js request handler
   c.render4r = createRender4r({
     routes,
-    createStore,
+    loadStore,
     layoutHtml
   });
   // Mock up Express handler params
