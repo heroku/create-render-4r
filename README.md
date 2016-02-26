@@ -26,10 +26,19 @@ Usage
 -----
 [Example Universal Web App](https://github.com/heroku/create-render-4r-example) demonstrates using this renderer in a working Universal app.
 
-### Add the module to `package.json`
+### Install
+
+Add the module to `package.json`:
 ```bash
 npm install create-render-4r --save
 ```
+
+### Upgrading
+
+This module follows semver. Breaking changes are indicated by major versions.
+
+See [UPGRADING](UPGRADING.md)
+
 
 ### `server.js`
 ```javascript
@@ -40,13 +49,13 @@ var app = express();
 
 // These are unique to your own app.
 var routes = require('./my-routes');
-var createStore = require('./my-create-store');
+var loadStore = require('./my-load-store');
 var layoutHtml = require('./my-layout-html');
 
 // Create the renderer.
 var render4r = createRender4r({
   routes:       routes,
-  createStore:  createStore,
+  loadStore:    loadStore,
   layoutHtml:   layoutHtml
 });
 
@@ -68,10 +77,22 @@ API
 ### `createRender4r()`
 This function is used to generate the Express.js handler. It accepts a single object argument with the properties:
 
-`createRender4r(routes, createStore, layoutHtml [, decorateResponse])`
+`createRender4r({ routes, loadStore, layoutHtml, decorateResponse})`
 
   * `routes` (required) the [`<Router/>` component](https://github.com/rackt/react-router/blob/latest/docs/guides/basics/RouteConfiguration.md)
-  * `createStore` (required) the [`createStore()` function](http://redux.js.org/docs/basics/Store.html)
+  * `loadStore` (required) a function taking initial state, returning the Redux store; created with [Redux `createStore`](http://redux.js.org/docs/basics/Store.html)
+
+    ```javascript
+    var Redux = require('redux');
+    var createStore = Redux.createStore;
+    var combineReducers = Redux.combineReducers;
+
+    var reducers = './my-reducers';
+
+    function loadStore(initialState) {
+      return createStore(combineReducers(reducers), initialState);
+    }
+    ```
   * `layoutHtml` (required) an HTML template function; this sample uses ES2015 module & template string syntx:
   
     ```javascript

@@ -19,17 +19,17 @@ test('Throws error without routes', t => {
   t.throws(() => {
     createRender4r({
       routes: null,
-      createStore: () => {},
+      loadStore: () => {},
       layoutHtml: () => {}
     });
   });
 });
 
-test('Throws error without createStore', t => {
+test('Throws error without loadStore', t => {
   t.throws(() => {
     createRender4r({
       routes: {},
-      createStore: null,
+      loadStore: null,
       layoutHtml: () => {}
     });
   });
@@ -39,7 +39,7 @@ test('Throws error without layoutHtml', t => {
   t.throws(() => {
     createRender4r({
       routes: {},
-      createStore: () => {},
+      loadStore: () => {},
       layoutHtml: null
     });
   });
@@ -48,7 +48,7 @@ test('Throws error without layoutHtml', t => {
 test('Creates a function', t => {
   const render = createRender4r({
     routes: {},
-    createStore: () => {},
+    loadStore: () => {},
     layoutHtml: () => {}
   });
   t.is(typeof render, 'function');

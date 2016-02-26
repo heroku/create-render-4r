@@ -20,15 +20,15 @@ function createRender4r(params) {
   }
 
   var routes = params.routes;
-  var createStore = params.createStore;
+  var loadStore = params.loadStore;
   var layoutHtml = params.layoutHtml;
   var decorateResponse = params.decorateResponse;
 
   if (routes == null || typeof routes !== 'object') {
     throw new Error('createRender4r requires a `routes` object');
   }
-  if (typeof createStore !== 'function') {
-    throw new Error('createRender4r requires a `createStore` function');
+  if (typeof loadStore !== 'function') {
+    throw new Error('createRender4r requires a `loadStore` function');
   }
   if (typeof layoutHtml !== 'function') {
     throw new Error('createRender4r requires a `layoutHtml` function');
@@ -38,7 +38,7 @@ function createRender4r(params) {
     var headers                   = req.headers || {};
     var history                   = useQueries(createMemoryHistory)();
     var location                  = history.createLocation(req.url);
-    var store                     = createStore({
+    var store                     = loadStore({
       // Capture protocol & hostname in Redux state
       sourceRequest: {
         protocol: headers['x-forwarded-proto'] || req.protocol,
