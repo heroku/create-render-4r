@@ -9,6 +9,7 @@ An Express.js handler function to render a **4r** app server-side:
 
 ![Diagram: Universal Web Apps & create-render-4r](http://universal-web-apps.s3.amazonaws.com/universal-web-apps-create-render-4r.png)
 
+
 Features
 --------
 
@@ -22,11 +23,14 @@ Features
     * **404** for unmatched URLs
     * [`decorateResponse()`](#decorateresponse) with custom status code based on Redux state
 
-Usage
------
-[Example Universal Web App](https://github.com/heroku/create-render-4r-example) demonstrates using this renderer in a working Universal app.
 
-### Install
+[Example Universal Web App](https://github.com/heroku/create-render-4r-example)
+----------------------------
+Demonstrates using this renderer in a working universal app.
+
+
+Install
+-------
 
 Add the module to `package.json`:
 ```bash
@@ -35,12 +39,13 @@ npm install create-render-4r --save
 
 ### Upgrading
 
-This module follows semver. Breaking changes are indicated by major versions.
-
-See [UPGRADING](UPGRADING.md)
+Breaking changes are indicated by major versions. See [UPGRADING](UPGRADING.md)
 
 
-### `server.js`
+Usage
+-----
+
+Basic usage in an [Express](http://expressjs.com) `server.js`:
 ```javascript
 var express = require('express');
 var createRender4r = require('create-render-4r');
@@ -152,20 +157,20 @@ static fetchData(dispatch, props) {
 
 [Example `fetchData()`](https://github.com/heroku/create-render-4r-example/blob/master/common/components/screens/home.js)
 
-### `state.sourceRequest.host` & `protocol`
+### Absolute URLs
 
-Frequently, app code will need its absolute URL, canonical hostname & protocol to **render links** or **make API requests**. This module includes a helper to use Host within universal code.
+Frequently, app code will need its absolute URL, canonical hostname & protocol to **render links** or **make API requests**.
 
-"Host" is an HTTP header containing the `hostname:port` requested of the web server.
+This module includes a `sourceRequest` reducer to handle this state.
 
-Example `host` values:
+Example `state.sourceRequest.host` values:
 
 * `localhost:3000`
 * `example.com`
 * `api.example.com:8443`
 * `velvet-glacier-1234.herokuapp.com`
 
-Example `protocol` values:
+Example `state.sourceRequest.protocol` values:
 
 * `https`
 * `http`
