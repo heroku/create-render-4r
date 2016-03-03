@@ -7,7 +7,7 @@ Universal render for React+ [![Build Status](https://travis-ci.org/heroku/create
   * [Redux](http://redux.js.org) state container
   * [Radium](http://stack.formidable.com/radium/) styles
 
-![Diagram: Universal Web Apps & create-render-4r](http://universal-web-apps.s3.amazonaws.com/universal-web-apps-create-render-4r.png)
+![Diagram: Universal Web Apps & create-render-4r](https://universal-web-apps.s3.amazonaws.com/universal-web-apps-create-render-4r-v3.png)
 
 
 Features
