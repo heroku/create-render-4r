@@ -88,57 +88,64 @@ It accepts a single argument, an object:
 createRender4r({ routes, loadStore, layoutHtml, decorateResponse })
 ```
 
-  * `routes` (required) the [`<Router/>` component](https://github.com/rackt/react-router/blob/latest/docs/guides/basics/RouteConfiguration.md)
-  * `loadStore` (required) a function taking initial state, returning the Redux store; created with [Redux `createStore`](http://redux.js.org/docs/basics/Store.html)
+#### `routes`
+(Required) The [`<Router/>` component](https://github.com/rackt/react-router/blob/latest/docs/guides/basics/RouteConfiguration.md)
 
-    ```javascript
-    var Redux = require('redux');
-    var createStore = Redux.createStore;
-    var combineReducers = Redux.combineReducers;
+#### `loadStore`
+(Required) A function taking initial state, returning the Redux store; created with [Redux `createStore`](http://redux.js.org/docs/basics/Store.html)
 
-    var reducers = './my-reducers';
+```javascript
+var Redux = require('redux');
+var createStore = Redux.createStore;
+var combineReducers = Redux.combineReducers;
 
-    function loadStore(initialState) {
-      return createStore(combineReducers(reducers), initialState);
-    }
-    ```
-  * `layoutHtml` (required) an HTML template function; this sample uses ES2015 module & template string syntx:
-  
-    ```javascript
-    function layoutHtml(componentHTML, cleanInitialState, documentMeta) {
-      return `
-        <!DOCTYPE html>
-        <html>
-          <head>
-            ${documentMeta}
+var reducers = './my-reducers';
 
-            <script type="application/javascript">
-              window.__INITIAL_STATE__ = ${cleanInitialState};
-            </script>
-          </head>
-          <body>
-            <div id="react-view">${componentHTML}</div>
+function loadStore(initialState) {
+  return createStore(combineReducers(reducers), initialState);
+}
+```
 
-            <script type="application/javascript" src="/bundle.js"></script>
-          </body>
-        </html>
-      `;
-    }
-    ```
-  * `decorateResponse` (optional) a side-effect function to update the response based on state:
-     
-    ```javascript
-    function decorateResponse(res, state) {
-      /*
-      Example: set 404 response status when the item couldn't be fetched,
-        while the app still renders a nice Not Found message in the UI.
-      */
-      var errText = state.item.get('error');
-      if (errText && /^404/.exec(errText)) {
-        res.status(404)
-      }
-    }
-    ```
+#### `layoutHtml`
+(Required) An HTML template function; this sample uses ES2015 module & template string syntx:
+
+```javascript
+function layoutHtml(componentHTML, cleanInitialState, documentMeta) {
+  return `
+    <!DOCTYPE html>
+    <html>
+      <head>
+        ${documentMeta}
+
+        <script type="application/javascript">
+          window.__INITIAL_STATE__ = ${cleanInitialState};
+        </script>
+      </head>
+      <body>
+        <div id="react-view">${componentHTML}</div>
+
+        <script type="application/javascript" src="/bundle.js"></script>
+      </body>
+    </html>
+  `;
+}
+```
+
+#### `decorateResponse`
+(Optional) A side-effect function to update the response based on state:
+ 
+```javascript
+function decorateResponse(res, state) {
+  /*
+  Example: set 404 response status when the item couldn't be fetched,
+    while the app still renders a nice Not Found message in the UI.
+  */
+  var errText = state.item.get('error');
+  if (errText && /^404/.exec(errText)) {
+    res.status(404)
+  }
+}
+```
 
 [Example `createRender4r()`](https://github.com/heroku/create-render-4r-example/blob/master/server/server.js)
 
@@ -146,7 +153,7 @@ createRender4r({ routes, loadStore, layoutHtml, decorateResponse })
 
 Per-component data loading for the current route.
 
-Define this static (class) method on React components to enable server-side fetching. You'll need to use a universal library like [isomporphic-fetch](https://github.com/niftylettuce/isomorphic-fetch) within [redux-thunk](https://github.com/gaearon/redux-thunk) async action creators so they will work equivalently on the server-side & in web browsers.
+Define this static (class) method on React components to enable server-side fetching. You'll need to use a universal library like [isomorphic-fetch](https://github.com/niftylettuce/isomorphic-fetch) within [redux-thunk](https://github.com/gaearon/redux-thunk) async action creators so they will work equivalently on the server-side & in web browsers.
 
 `fetchData(dispatch, props)`
 
@@ -165,7 +172,7 @@ static fetchData(dispatch, props) {
 
 Frequently, app code will need its absolute URL, canonical hostname & protocol to **render links** or **make API requests**.
 
-This module includes a `sourceRequest` reducer to handle this state.
+This module includes a `sourceRequest` reducer to handle this state. [It is captured on the server for each request](https://github.com/heroku/create-render-4r/blob/master/index.js#L42) as the Redux store is initialized.
 
 Example `state.sourceRequest.host` values:
 
