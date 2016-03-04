@@ -36,7 +36,7 @@
       "**/*-test.js"
     ],
     "require": [
-      "babel-core/register"
+      "babel/register"
     ]
   }
 }
