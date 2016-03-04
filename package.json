@@ -10,17 +10,26 @@
   "license": "MIT",
   "dependencies": {
     "history": "^1.13.0",
-    "immutable": "^3.7.6",
-    "radium": "^0.15.3",
-    "react": "^0.14.3",
-    "react-document-meta": "^2.0.0",
-    "react-dom": "^0.14.0",
-    "react-redux": "^3.1.0",
-    "react-router": "^1.0.0",
-    "redux": "^3.3.1"
+    "immutable": "^3.7.6"
   },
   "devDependencies": {
-    "ava": "^0.12.0"
+    "ava": "^0.12.0",
+    "radium": "0.15.x",
+    "react": "0.14.x",
+    "react-document-meta": "2.x",
+    "react-dom": "0.14.x",
+    "react-redux": "4.x",
+    "react-router": "1.x",
+    "redux": "3.x"
+  },
+  "peerDependencies": {
+    "radium": "0.15.x",
+    "react": "0.14.x",
+    "react-document-meta": "2.x",
+    "react-dom": "0.14.x",
+    "react-redux": "4.x",
+    "react-router": "1.x",
+    "redux": "3.x"
   },
   "ava": {
     "files": [
