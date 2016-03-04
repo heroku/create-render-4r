@@ -24,17 +24,14 @@ class AppComponent extends Component {
       }
     }
 
-    return (
-      <div
-        id="app-view"
-        style={styles.base}>
-
-        <DocumentMeta {...metaData}/>
-        <Style rules={globalStyles} />
-
-        {this.props.children}
-      </div>
-    );
+    return React.createElement('div', {
+      id: "app-view",
+      style: styles.base
+    },[
+      React.createElement(DocumentMeta, Object.assign({ key: '1' }, metaData)),
+      React.createElement(Style, { key: '2', rules: globalStyles }),
+      this.props.children
+    ])
   }
 
 }
@@ -48,19 +45,20 @@ class HomeComponent extends Component {
   // }
 
   render() {
-    return <div id="home-view" />;
+    return React.createElement('div', { id: "home-view" });
   }
 }
 const Home = Radium(HomeComponent);
 
 
 
-export var routes = (
-  <Route path="/" component={App}>
-    <IndexRoute component={Home}/>
-    <Redirect from="old-home" to="/"/>
-  </Route>
-);
+export var routes = React.createElement(Route, {
+  path: "/",
+  component: App
+},[
+  React.createElement(IndexRoute, { key: '1', component: Home }),
+  React.createElement(Redirect, { key: '2', from: "old-home", to: "/" })
+]);
 
 export function loadStore(initialState) {
   return createStore(combineReducers(reducers), initialState);

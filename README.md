@@ -35,6 +35,9 @@ Install
 Add the module to `package.json`:
 ```bash
 npm install create-render-4r --save
+
+# Save peer dependencies for production (otherwise they're only dev dependencies):
+npm install radium@0.15.x react@0.14.x react-document-meta@2.x react-dom@0.14.x react-redux@4.x react-router@1.x redux@3.x --save
 ```
 
 ### Upgrading
