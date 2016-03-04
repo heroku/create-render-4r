@@ -1,6 +1,6 @@
 {
   "name": "create-render-4r",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "Express.js middleware to render a React+Router+Redux+Radium app",
   "main": "index.js",
   "scripts": {
