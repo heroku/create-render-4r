@@ -7,6 +7,11 @@
     "test": "ava"
   },
   "author": "mars@heroku.com",
+  "homepage": "https://github.com/heroku/create-render-4r",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/heroku/create-render-4r.git"
+  },
   "license": "MIT",
   "dependencies": {
     "history": "^1.13.0",
