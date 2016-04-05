@@ -1,3 +1,4 @@
+var Immutable             = require('immutable');
 var React                 = require('react');
 var ReactRouter           = require('react-router');
 var RoutingContext        = ReactRouter.RoutingContext;
@@ -40,10 +41,10 @@ function createRender4r(params) {
     var location                  = history.createLocation(req.url);
     var store                     = loadStore({
       // Capture protocol & hostname in Redux state
-      sourceRequest: {
+      sourceRequest: new Immutable.Map({
         protocol: headers['x-forwarded-proto'] || req.protocol,
         host: headers.host
-      }
+      })
     });
     var userAgent                 = headers['user-agent'];
 
