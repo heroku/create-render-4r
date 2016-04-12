@@ -14,6 +14,7 @@ var DocumentMeta          = require('react-document-meta').default;
 var RadiumWrapper         = require('./lib/radium-wrapper');
 var sourceRequestActions  = require('./lib/actions/source-request');
 var sourceRequestReducers = require('./lib/reducers/source-request');
+var runSagas              = require('./lib/run-sagas');
 
 function createRender4r(params) {
   if (typeof params !== 'object') {
@@ -46,7 +47,13 @@ function createRender4r(params) {
         host: headers.host
       })
     });
+    var sagaMiddleware            = store.sagaMiddleware;
+    var hasSagaMiddleware         = sagaMiddleware != null;
     var userAgent                 = headers['user-agent'];
+
+    if (hasSagaMiddleware && typeof sagaMiddleware.run !== 'function') {
+      throw new Error('createRender4r requires `sagaMiddleware` to provide `run()`');
+    }
 
     match({
       routes: routes,
@@ -62,13 +69,24 @@ function createRender4r(params) {
       } else {
         // Await fetchData methods in the current route.
         Promise.all(
-          renderProps.routes
+          renderProps
+            .routes
             .filter(function(route) {
-              return route.component && route.component.fetchData;
+              var fetchData;
+              return route.component && 
+                (fetchData = route.component.fetchData) && 
+                  typeof fetchData === 'function';
             })
             .map(function(route) {
+              // Call each fetchData function
+              // …returning a Promise from the thunk.
               return route.component.fetchData(store.dispatch, renderProps);
             })
+          .concat(
+            hasSagaMiddleware
+              ? runSagas(renderProps.routes, store.dispatch, renderProps, sagaMiddleware)
+              : []
+          )
         )
         .then(function() {
 
