@@ -19,7 +19,7 @@ Features
   * Set HTML `<head>` content: `<title>` & `meta` elements with [DocumentMeta](https://github.com/kodyl/react-document-meta)
   * Per-component data loading for the current route:
     * [Redux thunk](https://github.com/gaearon/redux-thunk) via [`static fetchData()`](#fetchdata)
-    * [Redux sagas](http://yelouafi.github.io/redux-saga) via [`static runSagas()`](#runsagas)
+    * [Redux sagas](http://yelouafi.github.io/redux-saga) via [`static sagasToRun()`](#sagastorun)
   * Not-ok HTTP responses
     * **301** for React Router's [`<Redirect/>` component](https://github.com/rackt/react-router/blob/latest/docs/guides/basics/RouteConfiguration.md#preserving-urls)
     * **404** for unmatched URLs
@@ -178,11 +178,11 @@ static fetchData(dispatch, props) {
 
 [Example `fetchData()`](https://github.com/heroku/create-render-4r-example/blob/master/common/components/screens/home.js)
 
-#### `runSagas()`
+#### `sagasToRun()`
 
 Define this static (class) method on React components to enable Generator-based server-side fetching via [Redux sagas](http://yelouafi.github.io/redux-saga).
 
-`runSagas(dispatch, props)`
+`sagasToRun(dispatch, props)`
 
   * `dispatch` (required) the Redux store's dispatcher
   * `props` (required) the component's props
@@ -190,7 +190,7 @@ Define this static (class) method on React components to enable Generator-based 
 Must return an array of arrays of arguments for [`middleware.run`](http://yelouafi.github.io/redux-saga/docs/api/index.html#middlewarerunsaga-args).
 
 ```javascript
-static runSagas(dispatch, props) {
+static sagasToRun(dispatch, props) {
   return [
     [fetchThingsSaga],
     [verifyAuthSaga, { userId: props.params.authUserId }]
