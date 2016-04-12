@@ -52,7 +52,7 @@ function createRender4r(params) {
     var userAgent                 = headers['user-agent'];
 
     if (hasSagaMiddleware && typeof sagaMiddleware.run !== 'function') {
-      throw new Error('createRender4r requires `sagaMiddleware` to provide `run()`');
+      next(new Error('createRender4r requires `sagaMiddleware` to provide `run()`'));
     }
 
     match({
