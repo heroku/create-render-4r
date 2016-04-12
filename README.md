@@ -206,7 +206,7 @@ import createSagaMiddleware       from 'redux-saga';
 // …
 
 export default function loadStore(...createStoreRestParams) {
-  const sagaMiddleware            = createSagaMiddleware(...Object.values(sagas));
+  const sagaMiddleware            = createSagaMiddleware(...sagas);
   // …
   // This accessor must be added for Saga middleware to be used server-side:
   store.sagaMiddleware            = sagaMiddleware;
