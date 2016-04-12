@@ -35,7 +35,7 @@ class AppComponent extends Component {
   }
 
 }
-const App = Radium(AppComponent);
+export const App = Radium(AppComponent);
 
 
 class HomeComponent extends Component {
@@ -48,11 +48,11 @@ class HomeComponent extends Component {
     return React.createElement('div', { id: "home-view" });
   }
 }
-const Home = Radium(HomeComponent);
+export const Home = Radium(HomeComponent);
 
 
 
-export var routes = React.createElement(Route, {
+export const routes = React.createElement(Route, {
   path: "/",
   component: App
 },[

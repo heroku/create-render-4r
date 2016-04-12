@@ -25,7 +25,8 @@
     "react-dom": "0.14.x",
     "react-redux": "4.x",
     "react-router": "1.x",
-    "redux": "3.x"
+    "redux": "3.x",
+    "redux-saga": "0.9.x"
   },
   "peerDependencies": {
     "radium": "0.15.x",

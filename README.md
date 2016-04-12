@@ -17,7 +17,9 @@ Features
   * Uses React's rock-solid [`ReactDOMServer.renderToString`](http://facebook.github.io/react/docs/top-level-api.html#reactdomserver.rendertostring) for synchronous rendering
   * Instant re-hydration of app on browser using Redux initial state
   * Set HTML `<head>` content: `<title>` & `meta` elements with [DocumentMeta](https://github.com/kodyl/react-document-meta)
-  * Per-component data loading for the current route via [`static fetchData()`](#fetchdata) defined on components
+  * Per-component data loading for the current route:
+    * [Redux thunk](https://github.com/gaearon/redux-thunk) via [`static fetchData()`](#fetchdata)
+    * [Redux sagas](http://yelouafi.github.io/redux-saga) via [`static runSagas()`](#runsagas)
   * Not-ok HTTP responses
     * **301** for React Router's [`<Redirect/>` component](https://github.com/rackt/react-router/blob/latest/docs/guides/basics/RouteConfiguration.md#preserving-urls)
     * **404** for unmatched URLs
@@ -152,16 +154,21 @@ function decorateResponse(res, state) {
 
 [Example `createRender4r()`](https://github.com/heroku/create-render-4r-example/blob/master/server/server.js)
 
-### `fetchData()`
+
+### Server-side async data loading
 
 Per-component data loading for the current route.
 
-Define this static (class) method on React components to enable server-side fetching. You'll need to use a universal library like [isomorphic-fetch](https://github.com/niftylettuce/isomorphic-fetch) within [redux-thunk](https://github.com/gaearon/redux-thunk) async action creators so they will work equivalently on the server-side & in web browsers.
+#### `fetchData()`
+
+Define this static (class) method on React components to enable Promise-based server-side fetching. You'll need to use a universal library like [isomorphic-fetch](https://github.com/niftylettuce/isomorphic-fetch) within [redux-thunk](https://github.com/gaearon/redux-thunk) async action creators so they will work equivalently on the server-side & in web browsers.
 
 `fetchData(dispatch, props)`
 
   * `dispatch` (required) the Redux store's dispatcher
   * `props` (required) the component's props
+
+Must return a Promise to await completetion of the fetch. (This is what Redux thunk does.)
 
 ```javascript
 static fetchData(dispatch, props) {
@@ -170,6 +177,42 @@ static fetchData(dispatch, props) {
 ```
 
 [Example `fetchData()`](https://github.com/heroku/create-render-4r-example/blob/master/common/components/screens/home.js)
+
+#### `runSagas()`
+
+Define this static (class) method on React components to enable Generator-based server-side fetching via [Redux sagas](http://yelouafi.github.io/redux-saga).
+
+`runSagas(dispatch, props)`
+
+  * `dispatch` (required) the Redux store's dispatcher
+  * `props` (required) the component's props
+
+Must return an array of arrays of arguments for [`middleware.run`](http://yelouafi.github.io/redux-saga/docs/api/index.html#middlewarerunsaga-args).
+
+```javascript
+static runSagas(dispatch, props) {
+  return [
+    [fetchThingsSaga],
+    [verifyAuthSaga, { userId: props.params.authUserId }]
+  ];
+}
+```
+
+Additionally, the Redux store returned by [`loadStore()`](#loadstore) must expose the Saga middleware as `store.sagaMiddleware`:
+
+```javascript
+// …
+import createSagaMiddleware       from 'redux-saga';
+// …
+
+export default function loadStore(...createStoreRestParams) {
+  const sagaMiddleware            = createSagaMiddleware(...sagas);
+  // …
+  // This accessor must be added for Saga middleware to be used server-side:
+  store.sagaMiddleware            = sagaMiddleware;
+  return store;
+}
+```
 
 ### Absolute URLs
 
