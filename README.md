@@ -104,7 +104,7 @@ var Redux = require('redux');
 var createStore = Redux.createStore;
 var combineReducers = Redux.combineReducers;
 
-var reducers = './my-reducers';
+var reducers = require('./my-reducers');
 
 function loadStore(initialState) {
   return createStore(combineReducers(reducers), initialState);
@@ -138,16 +138,21 @@ function layoutHtml(componentHTML, cleanInitialState, documentMeta) {
 
 #### `decorateResponse`
 (Optional) A side-effect function to update the response based on state:
- 
+
+`decorateResponse(response, state)`
+
+  * `response` (required) the [Express response object](http://expressjs.com/en/4x/api.html#res)
+  * `state` (required) the Redux state atom, as returned from `getState()`
+
 ```javascript
-function decorateResponse(res, state) {
+function decorateResponse(response, state) {
   /*
   Example: set 404 response status when the item couldn't be fetched,
     while the app still renders a nice Not Found message in the UI.
   */
   var errText = state.item.get('error');
   if (errText && /^404/.exec(errText)) {
-    res.status(404)
+    response.status(404)
   }
 }
 ```
